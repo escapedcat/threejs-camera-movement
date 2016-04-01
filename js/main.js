@@ -28,6 +28,20 @@ that didn't work. because i don't have a clue how to change the rotataion of the
 now i'm using the lookAt value to look at a vector which works fine.
 would still be nice to know how it would work with pure vectors
 
+so where was i?
+thing is that it's nice to move from one point to another zooming in and out.
+but in the end only one zoom in and maybe one final zoom out is needed.
+the moving across all points should be done by moving closly over the earths surface.
+
+and i talked with @rmalchow about this and he said the camera should follow an object and lookAt that.
+than it's also easier to do certain camera changes like hm... dolly, pan, orbit.
+
+ideally the camera should always be in the back of that point. but i'm not sure ho to achieve that.
+so i forst attach teh camera to the point i'm looking at and see how that goes.
+
+ok, i need to change the up vector of the camera. otherwise the cam can only look straight from the top or is lying weirdly on the side.
+no, doesn't help. the issue is that the camera always needs to stay behind the object. but not in the way of being statically attached to a ceratin position of that object.
+i tneeds to know the direction of the object and stay in the back. i guess.
 */
 
 
@@ -183,19 +197,19 @@ function addMeshes() {
   // meshSphereIndicator.position.set(0,0,0);
   meshSphere.add( meshSphereIndicator );
 
-  meshSphereIndicator.add( camera );
+  // meshSphereIndicator.add( camera );
 
   // --- indicator or movement among point on the world -------------------------
   const meshMovementIndicator = new THREE.Mesh( geometrySphereSimple, materialSimple );
   meshSphereIndicator.add( meshMovementIndicator );
   meshMovementIndicator.position.set(0,0,100); //z if width of sphere to be on the surface
-
+  meshMovementIndicator.add( camera );
   
 
-
+  // camera.up(new THREE.Vector3(1,0,0));
   
 //  camera.position.copy(vecOriginal.multiplyScalar(3));
-  camera.position.set(0,0,160);
+  camera.position.set(0,-50,20);
   // camera.lookAt(meshSphere.position);
   camera.lookAt(new THREE.Vector3(0,0,0));
   // console.dir(vecNormalized);
@@ -273,9 +287,9 @@ function setupTween(vertFrom, vertTo) {
     meshSphereIndicator.lookAt(angle);    
   };
 
-  const tweenUp =       new TWEEN.Tween(camera.position).to(positionUp, 2500);
+  // const tweenUp =       new TWEEN.Tween(camera.position).to(positionUp, 2500);
   const tweenMoveNext = new TWEEN.Tween(angle).to(angleNext, 5000);
-  const tweenDown =     new TWEEN.Tween(camera.position).to(positionDown, 2500);
+  // const tweenDown =     new TWEEN.Tween(camera.position).to(positionDown, 2500);
   
 //   tweenUp.easing(TWEEN.Easing.Elastic.Out)
 //   tweenMoveNext.easing(TWEEN.Easing.Back.InOut)
@@ -292,11 +306,11 @@ function setupTween(vertFrom, vertTo) {
   // tweenMoveNext.easing(TWEEN.Easing.Cubic.InOut)
   // tweenDown.easing(TWEEN.Easing.Bounce.Out)
 
-  tweenUp.chain(tweenDown);
+  // tweenUp.chain(tweenDown);
 
   tweenMoveNext.onUpdate(updateAngle);
 
-  tweenUp.start();
+  // tweenUp.start();
   tweenMoveNext.start();
   
 }
